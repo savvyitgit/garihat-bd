@@ -8,6 +8,7 @@ import HowItWorks from "./Components/HowItWorks"
 import Footer from "./Components/Footer"
 import Listings from "./pages/Listings"
 import ListingDetail from "./pages/ListingDetail"
+import PostAd from "./pages/PostAd"
 
 function Home() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/listings" element={<Listings />} />
         <Route path="/listings/:id" element={<ListingDetail />} />
+        <Route path="/post-ad" element={<PostAd />} />
       </Routes>
     </BrowserRouter>
   )
