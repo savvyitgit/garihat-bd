@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const navLinks = ['Used Cars', 'New Cars', 'Trucks', 'Motorcycles', 'Sell Car']
 
@@ -26,11 +27,21 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Desktop Sign In */}
-        <a href="#" 
-          className="hidden md:block bg-[#DB1408] text-white px-5 py-2 rounded font-bold text-sm">
-          Sign In
-        </a>
+        {/* Right side: Post Ad + Sign In */}
+        <div className="hidden md:flex items-center gap-3">
+          <Link to="/post-ad" 
+            className="flex items-center gap-1 bg-[#DB1408] text-white px-4 py-2 rounded font-bold text-sm hover:bg-red-700">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+            </svg>
+            Post an Ad
+          </Link>
+
+          <a href="#" 
+            className="border-2 border-[#DB1408] text-[#DB1408] px-5 py-2 rounded font-bold text-sm hover:bg-red-50">
+            Sign In
+          </a>
+        </div>
 
         {/* Mobile Hamburger */}
         <button 
@@ -50,6 +61,10 @@ const Navbar = () => {
               {link}
             </a>
           ))}
+          <Link to="/post-ad" 
+            className="bg-[#DB1408] text-white px-5 py-2 rounded font-bold text-sm text-center">
+            + Post an Ad
+          </Link>
           <a href="#" 
             className="bg-[#1B0EA6] text-white px-5 py-2 rounded font-bold text-sm text-center">
             Sign In
