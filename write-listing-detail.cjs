@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+const fs = require('fs');
+
+const content = `import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
@@ -53,7 +55,7 @@ const ListingDetail = () => {
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-gray-500 hover:text-[#DB1408] mb-6 transition"
         >
-          ← Back to Listings
+          \u2190 Back to Listings
         </button>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -84,7 +86,7 @@ const ListingDetail = () => {
           <div className="flex flex-col gap-4">
             <div>
               <h1 className="text-2xl font-bold text-gray-800 mb-1">{car.title}</h1>
-              <p className="text-3xl font-bold text-[#DB1408]">৳ {car.price?.toLocaleString()}</p>
+              <p className="text-3xl font-bold text-[#DB1408]">\u09F3 {car.price?.toLocaleString()}</p>
             </div>
 
             <div className="grid grid-cols-2 gap-3 bg-gray-50 rounded-xl p-4">
@@ -132,7 +134,7 @@ const ListingDetail = () => {
               onClick={() => setShowPhone(!showPhone)}
               className="w-full border-2 border-[#DB1408] text-[#DB1408] py-3 rounded-xl font-bold text-lg hover:bg-red-50 transition"
             >
-              {showPhone ? car.seller?.phone : "📞 Show Phone Number"}
+              {showPhone ? car.seller?.phone : "\uD83D\uDCDE Show Phone Number"}
             </button>
           </div>
 
@@ -152,9 +154,9 @@ const ListingDetail = () => {
           <h2 className="text-xl font-bold text-gray-800 mb-4">You May Also Like</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {related.map(item => (
-              <a
-                key={item["_id"]}
-                href={"/listings/" + item["_id"]}
+              
+                key={item._id}
+                href={"/listings/" + item._id}
                 className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition bg-white"
               >
                 <img
@@ -164,8 +166,8 @@ const ListingDetail = () => {
                 />
                 <div className="p-3">
                   <p className="font-semibold text-gray-800 text-sm truncate">{item.title}</p>
-                  <p className="text-[#DB1408] font-bold text-sm mt-1">৳ {item.price?.toLocaleString()}</p>
-                  <p className="text-xs text-gray-400 mt-1">{item.location} · {item.category}</p>
+                  <p className="text-[#DB1408] font-bold text-sm mt-1">\u09F3 {item.price?.toLocaleString()}</p>
+                  <p className="text-xs text-gray-400 mt-1">{item.location} \u00B7 {item.category}</p>
                 </div>
               </a>
             ))}
@@ -179,3 +181,7 @@ const ListingDetail = () => {
 };
 
 export default ListingDetail;
+`;
+
+fs.writeFileSync('src/pages/ListingDetail.jsx', content, 'utf8');
+console.log('ListingDetail.jsx written successfully!');
