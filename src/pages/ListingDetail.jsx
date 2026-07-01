@@ -9,6 +9,7 @@ const ListingDetail = () => {
   const [car, setCar] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showPhone, setShowPhone] = useState(false);
+  const [activeImg, setActiveImg] = useState(0);
 
   useEffect(() => {
     fetch("http://localhost:5000/api/listings/" + id)
@@ -19,6 +20,10 @@ const ListingDetail = () => {
 
   if (loading) return <div className="text-center mt-20">Loading...</div>;
   if (!car) return <div className="text-center mt-20">Listing not found</div>;
+
+  const images = car.images && car.images.length > 0 
+    ? car.images 
+    : ["/modem-black-car.png"];
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -35,58 +40,93 @@ const ListingDetail = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-          {/* Image */}
-          <div className="rounded-xl overflow-hidden border border-gray-200">
-            <img
-              src={car.images && car.images[0] ? car.images[0] : "/modem-black-car.png"}
-              alt={car.title}
-              className="w-full h-80 object-cover"
-            />
+          {/* Image Gallery */}
+          <div>
+            {/* Main Image */}
+            <div className="rounded-xl overflow-hidden border border-gray-200 mb-3">
+              <img
+                src={images[activeImg]}
+                alt={car.title}
+                className="w-full h-80 object-cover transition-all duration-300"
+              />
+            </div>
+
+            {/* Thumbnails */}
+            {images.length > 1 && (
+              <div className="grid grid-cols-4 gap-2">
+                {images.map((img, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => setActiveImg(idx)}
+                    className={`cursor-pointer rounded-lg overflow-hidden border-2 transition ${
+                      activeImg === idx 
+                        ? "border-[#DB1408]" 
+                        : "border-transparent hover:border-gray-300"
+                    }`}
+                  >
+                    <img
+                      src={img}
+                      alt={`photo ${idx + 1}`}
+                      className="w-full h-16 object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Details */}
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">{car.title}</h1>
-            <p className="text-3xl font-bold text-[#DB1408] mb-4">৳ {car.price?.toLocaleString()}</p>
+          <div className="flex flex-col gap-4">
+            
+            {/* Title & Price */}
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800 mb-1">{car.title}</h1>
+              <p className="text-3xl font-bold text-[#DB1408]">৳ {car.price?.toLocaleString()}</p>
+            </div>
 
-            <div className="flex flex-col gap-3 text-gray-600 mb-4">
-              <div className="flex gap-2">
-                <span className="font-semibold w-28">Location:</span>
-                <span>{car.location}</span>
+            {/* Key Info Grid */}
+            <div className="grid grid-cols-2 gap-3 bg-gray-50 rounded-xl p-4">
+              <div>
+                <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Location</p>
+                <p className="text-sm font-semibold text-gray-700">{car.location}</p>
               </div>
-              <div className="flex gap-2">
-                <span className="font-semibold w-28">Year:</span>
-                <span>{car.year}</span>
+              <div>
+                <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Year</p>
+                <p className="text-sm font-semibold text-gray-700">{car.year}</p>
               </div>
-              <div className="flex gap-2">
-                <span className="font-semibold w-28">Fuel:</span>
-                <span>{car.fuel}</span>
+              <div>
+                <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Brand</p>
+                <p className="text-sm font-semibold text-gray-700">{car.brand}</p>
               </div>
-              <div className="flex gap-2">
-                <span className="font-semibold w-28">Brand:</span>
-                <span>{car.brand}</span>
+              <div>
+                <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Fuel</p>
+                <p className="text-sm font-semibold text-gray-700">{car.fuel}</p>
               </div>
-              <div className="flex gap-2">
-                <span className="font-semibold w-28">Condition:</span>
-                <span>{car.condition}</span>
+              <div>
+                <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Condition</p>
+                <p className="text-sm font-semibold text-gray-700">{car.condition}</p>
               </div>
-              <div className="flex gap-2">
-                <span className="font-semibold w-28">Category:</span>
-                <span>{car.category}</span>
+              <div>
+                <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Category</p>
+                <p className="text-sm font-semibold text-gray-700">{car.category}</p>
               </div>
             </div>
 
             {/* Seller Info */}
-            <div className="bg-gray-50 rounded-xl p-4 mb-4">
-              <p className="font-semibold text-gray-700 mb-1">Seller</p>
-              <p className="text-gray-600">{car.seller?.name}</p>
-              <p className="text-xs text-gray-400 mt-1">
-                Posted: {new Date(car.createdAt).toLocaleDateString()}
-              </p>
+            <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl p-4">
+              <div className="w-10 h-10 rounded-full bg-[#DB1408] flex items-center justify-center text-white font-bold text-lg shrink-0">
+                {car.seller?.name?.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <p className="font-semibold text-gray-800">{car.seller?.name}</p>
+                <p className="text-xs text-gray-400">
+                  Posted: {new Date(car.createdAt).toLocaleDateString()}
+                </p>
+              </div>
             </div>
 
             {/* Buttons */}
-            <button className="w-full bg-[#DB1408] text-white py-3 rounded-xl font-bold text-lg hover:bg-red-700 transition mb-3">
+            <button className="w-full bg-[#DB1408] text-white py-3 rounded-xl font-bold text-lg hover:bg-red-700 transition">
               Contact Seller
             </button>
 
@@ -96,6 +136,7 @@ const ListingDetail = () => {
             >
               {showPhone ? car.seller?.phone : "📞 Show Phone Number"}
             </button>
+
           </div>
 
         </div>

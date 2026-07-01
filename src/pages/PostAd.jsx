@@ -36,9 +36,10 @@ const PostAd = () => {
   };
 
   const handleImages = e => {
-    const files = Array.from(e.target.files).slice(0, 4);
-    setImages(files);
-    const urls = files.map(f => URL.createObjectURL(f));
+    const newFiles = Array.from(e.target.files);
+    const combined = [...images, ...newFiles].slice(0, 4);
+    setImages(combined);
+    const urls = combined.map(f => URL.createObjectURL(f));
     setPreviews(urls);
   };
 
@@ -74,7 +75,7 @@ const PostAd = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: form.brand + " " + form.model + " " + form.year,
+          title: [form.brand, form.model, form.year].filter(Boolean).join(' '),
           brand: form.brand, model: form.model,
           year: parseInt(form.year), price: parseInt(form.price),
           category: form.category, condition: form.condition,
@@ -192,18 +193,36 @@ const PostAd = () => {
             </div>
 
             <div>
-              <label className="text-sm font-semibold text-gray-700 mb-1 block">Photos (up to 4)</label>
-              <input type="file" accept="image/*" multiple onChange={handleImages} className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm" />
-              {previews.length > 0 && (
-                <div className="grid grid-cols-4 gap-2 mt-3">
-                  {previews.map((url, idx) => (
-                    <div key={idx} className="relative">
-                      <img src={url} alt="preview" className="w-full h-20 object-cover rounded-lg" />
-                      <button onClick={() => removeImage(idx)} className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">x</button>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <label className="text-sm font-semibold text-gray-700 mb-1 block">
+                Photos ({previews.length}/4)
+              </label>
+              
+              <div className="grid grid-cols-4 gap-2 mt-2">
+                {previews.map((url, idx) => (
+                  <div key={idx} className="relative">
+                    <img src={url} alt="preview" className="w-full h-20 object-cover rounded-lg border border-gray-200" />
+                    <button 
+                      type="button"
+                      onClick={() => removeImage(idx)} 
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                      ✕
+                    </button>
+                  </div>
+                ))}
+
+                {previews.length < 4 && (
+                  <label className="w-full h-20 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-[#DB1408] hover:bg-red-50 transition">
+                    <span className="text-2xl text-gray-400">+</span>
+                    <span className="text-xs text-gray-400">Add Photo</span>
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      multiple 
+                      onChange={handleImages} 
+                      className="hidden" />
+                  </label>
+                )}
+              </div>
             </div>
 
             <div className="flex gap-3">
